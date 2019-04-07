@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "a1.repository-type", havingValue = "JPA")
 public class HibernateRepositoryFactory implements RepositoryFactory {
-    private  final EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Override
     public QuestionRepository createQuestionRepository() {
@@ -21,16 +21,17 @@ public class HibernateRepositoryFactory implements RepositoryFactory {
 
     @Override
     public UserRepository createUserRepository() {
+
         return new HibernateUserRepository(entityManager);
     }
 
     @Override
     public AnswerRepository createAnswerRepository() {
-        return null;
+        return new HibernateAnswerRepository(entityManager);
     }
 
     @Override
     public TagRepository createTagRepository() {
-        return null;
+        return new HibernateTagRepository(entityManager);
     }
 }

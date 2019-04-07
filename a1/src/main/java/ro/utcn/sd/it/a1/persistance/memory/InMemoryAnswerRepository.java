@@ -26,4 +26,9 @@ public class InMemoryAnswerRepository implements AnswerRepository {
     public Optional<Answer> findById(int id) {
         return Optional.empty();
     }
+
+    @Override
+    public Answer edit(Answer answer) {
+        return null;
+    }
 }

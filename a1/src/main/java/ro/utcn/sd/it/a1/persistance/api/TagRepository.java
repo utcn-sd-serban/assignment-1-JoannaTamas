@@ -7,8 +7,11 @@ import java.util.Optional;
 
 public interface TagRepository {
     List<Tag> findAll();
+
     Optional<Tag> findById(int id);
+
     Tag save(Tag tag);
+
     void remove(Tag tag);
 
 }

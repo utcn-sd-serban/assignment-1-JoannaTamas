@@ -12,16 +12,15 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class HibernateQuestionRepository implements QuestionRepository {
- private final EntityManager entityManager;
-
+    private final EntityManager entityManager;
 
 
     @Override
     public Question save(Question question) {
-        if(question.getId() == null){
+        if (question.getId() == null) {
             entityManager.persist(question);
             return question;
-        }else {
+        } else {
             return entityManager.merge(question);
         }
 
@@ -30,7 +29,7 @@ public class HibernateQuestionRepository implements QuestionRepository {
     @Override
     public Optional<Question> findById(int id) {
 
-        return Optional.ofNullable(entityManager.find(Question.class,id));
+        return Optional.ofNullable(entityManager.find(Question.class, id));
     }
 
     @Override
@@ -46,18 +45,12 @@ public class HibernateQuestionRepository implements QuestionRepository {
 
     @Override
     public List<Question> findAll() {
-        CriteriaBuilder builder=entityManager.getCriteriaBuilder();
-        CriteriaQuery<Question> query=builder.createQuery(Question.class);
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Question> query = builder.createQuery(Question.class);
         query.select(query.from(Question.class));
-
-
         return entityManager.createQuery(query).getResultList();
     }
 
-    @Override
-    public List<Question> findByTag(String tag) {
-        return null;
-    }
 
     @Override
     public List<Question> listByDate() {

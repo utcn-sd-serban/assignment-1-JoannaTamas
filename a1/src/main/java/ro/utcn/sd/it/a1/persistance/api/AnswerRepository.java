@@ -8,7 +8,12 @@ import java.util.Optional;
 
 public interface AnswerRepository {
     List<Answer> findAll();
+
     Answer save(Answer ans);
+
     void remove(Answer answer);
+
     Optional<Answer> findById(int id);
+
+    Answer edit(Answer answer);
 }

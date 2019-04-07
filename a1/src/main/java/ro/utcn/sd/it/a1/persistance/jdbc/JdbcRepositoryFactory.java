@@ -14,7 +14,7 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
     private final JdbcTemplate template;
 
     @Override
-    public QuestionRepository createQuestionRepository(){
+    public QuestionRepository createQuestionRepository() {
         return new JdbcQuestionRepository(template);
     }
 
@@ -25,7 +25,7 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
 
     @Override
     public AnswerRepository createAnswerRepository() {
-        return null;
+        return new JdbcAnswerRepository(template);
     }
 
     @Override

@@ -16,6 +16,18 @@ CREATE TABLE IF NOT EXISTS question(
 
 );
 
+CREATE TABLE IF NOT EXISTS answer (
+          id INT PRIMARY KEY AUTO_INCREMENT,
+          question_id INT,
+          author_id INT,
+          text VARCHAR(500),
+          date_time TIMESTAMP,
+          FOREIGN KEY(author_id) REFERENCES users(id) ON DELETE CASCADE,
+          FOREIGN KEY(question_id) REFERENCES question(id) ON DELETE CASCADE
+);
+
+
+
 CREATE TABLE IF NOT EXISTS tag(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     tag_name VARCHAR(32) NOT NULL
@@ -36,3 +48,4 @@ CREATE TABLE IF NOT EXISTS question_tag(
    FOREIGN KEY(question_id) REFERENCES question(id) ON DELETE CASCADE ,
    FOREIGN KEY(tag_id) REFERENCES tag(id) ON DELETE CASCADE
 );
+

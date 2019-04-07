@@ -5,7 +5,10 @@ package ro.utcn.sd.it.a1.persistance.api;
 public interface RepositoryFactory {
 
     QuestionRepository createQuestionRepository();
+
     UserRepository createUserRepository();
+
     AnswerRepository createAnswerRepository();
+
     TagRepository createTagRepository();
 }

@@ -44,11 +44,7 @@ public class InMemoryQuestionRepository implements QuestionRepository {
         return new ArrayList<>(data.values());
     }
 
-    @Override
-    public List<Question> findByTag(String tag) {
 
-        return new ArrayList<>(data.values());
-    }
 
     @Override
     public List<Question> listByDate() {

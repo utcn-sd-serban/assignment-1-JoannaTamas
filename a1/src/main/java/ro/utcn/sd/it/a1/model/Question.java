@@ -54,6 +54,10 @@ public class Question {
 
     }
 
+    public Question(int question_id) {
+        this.id=question_id;
+    }
+
     // private DateTimeFormat date;
 
 

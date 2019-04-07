@@ -22,21 +22,13 @@ public class JdbcQuestionRepository implements QuestionRepository {
     private final JdbcTemplate template;
 
 
-
     @Override
     public Question save(Question question) {
-        /*if(question.getId()!=0){
-            update(question);
-        }else {
-            int id=insert(question);
-            question.setId(id);
-        }
-        return question;
-        */
-        if(question.getId()==null){
+
+        if (question.getId() == null) {
             question.setId(insert(question));
             insert_tag(question);
-        }else {
+        } else {
             update(question);
         }
         return question;
@@ -44,98 +36,83 @@ public class JdbcQuestionRepository implements QuestionRepository {
 
     @Override
     public Optional<Question> findById(int id) {
-        //query for reading stuff
-        List<Question> questions=template.query("SELECT * FROM question WHERE id= ",new Object[]{id},
-                (resultSet,i)-> new Question(resultSet.getInt("id"),
-                        resultSet.getString("title"),resultSet.getString("text"),
-                        new User(resultSet.getInt("author_id")),resultSet.getTimestamp("date_time")));
 
-        return questions.isEmpty() ? Optional.empty(): Optional.of(questions.get(0));
+        List<Question> questions = template.query("SELECT * FROM question WHERE id=? ", new Object[]{id},
+                (resultSet, i) -> new Question(resultSet.getInt("id"),
+                        resultSet.getString("title"), resultSet.getString("text"),
+                        new User(resultSet.getInt("author_id")), resultSet.getTimestamp("date_time")));
+
+        return questions.isEmpty() ? Optional.empty() : Optional.of(questions.get(0));
     }
 
     @Override
     public List<Question> findByTitle(String title) {
         //query for reading stuff
-        List<Question> questions=template.query("SELECT * FROM question WHERE  title =? ",new Object[]{title},
-                (resultSet,i)-> new Question(resultSet.getInt("id"),
-                        resultSet.getString("title"),resultSet.getString("text"),
-                        new User(resultSet.getInt("author_id")),resultSet.getTimestamp("date_time")));
+        List<Question> questions = template.query("SELECT * FROM question WHERE  title =? ", new Object[]{title},
+                (resultSet, i) -> new Question(resultSet.getInt("id"),
+                        resultSet.getString("title"), resultSet.getString("text"),
+                        new User(resultSet.getInt("author_id")), resultSet.getTimestamp("date_time")));
 
-        return questions.isEmpty() ? null: questions;
+        return questions.isEmpty() ? null : questions;
     }
 
 
     @Override
     public void remove(Question question) {
-        //update is for modifying stuff: insert, delete,update
-        template.update( "DELETE FROM question WHERE id=?", question.getId());
+        template.update("DELETE FROM question WHERE id=?", question.getId());
 
     }
 
     @Override
     public List<Question> findAll() {
 
-    return template.query("SELECT * FROM question",(resultSet,i)->
-            new Question(resultSet.getInt("id"),resultSet.getString("title"),resultSet.getString("text"),
-                    new User(resultSet.getInt("author_id")),resultSet.getTimestamp("date_time")));
-                    //resultSet.getDate("date")));
+        return template.query("SELECT * FROM question", (resultSet, i) ->
+                new Question(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("text"),
+                        new User(resultSet.getInt("author_id")), resultSet.getTimestamp("date_time")));
     }
 
 
-    @Override
-    public List<Question> findByTag(String tag) {
-            //query for reading stuff
-            List<Question> questions=template.query("SELECT * FROM question WHERE  tag =? ",new Object[]{tag},
-                    (resultSet,i)-> new Question(resultSet.getInt("id"),
-                            resultSet.getString("title"),resultSet.getString("text"),
-                            new User(resultSet.getInt("author_id")),resultSet.getTimestamp("date_time")));
-
-            return questions.isEmpty() ? null: questions;
-        }
 
     @Override
     public List<Question> listByDate() {
-        return template.query("SELECT * FROM question ORDER BY date_time DESC",(resultSet,i)->
-                new Question(resultSet.getInt("id"),resultSet.getString("title"),resultSet.getString("text"),
-                        new User(resultSet.getInt("author_id")),resultSet.getTimestamp("date_time")));
+        return template.query("SELECT * FROM question ORDER BY date_time DESC", (resultSet, i) ->
+                new Question(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("text"),
+                        new User(resultSet.getInt("author_id")), resultSet.getTimestamp("date_time")));
     }
 
 
-    private void insert_tag(Question question){
-        SimpleJdbcInsert insert= new SimpleJdbcInsert(template);
+    private void insert_tag(Question question) {
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(template);
         insert.setTableName("question_tag");
-        Tag t=question.getTag();
-        Map<String, Object>data=new HashMap<>();
-        //Tag t=question.getTag();
-        data.put( "question_id", question.getId());
-        data.put( "tag_id",t.getId());
+        Tag t = question.getTag();
+        Map<String, Object> data = new HashMap<>();
+        data.put("question_id", question.getId());
+        data.put("tag_id", t.getId());
 
 
-         insert.execute(data);
+        insert.execute(data);
 
     }
 
-    private int insert(Question question){
-        SimpleJdbcInsert insert= new SimpleJdbcInsert(template);
+    private int insert(Question question) {
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(template);
         insert.setTableName("question");
         insert.setGeneratedKeyName("id");
 
-        Map<String, Object>data=new HashMap<>();
-        data.put( "title", question.getTitle());
-        data.put( "text",question.getText());
-        data.put("author_id",question.getAuthor().getId());
-        data.put("date_time",question.getDate_time());
-        //data.put("date",question.getDate());
-        //insert.setGeneratedKeyName("date_time");
+        Map<String, Object> data = new HashMap<>();
+        data.put("title", question.getTitle());
+        data.put("text", question.getText());
+        data.put("author_id", question.getAuthor().getId());
+        data.put("date_time", question.getDate_time());
 
         return insert.executeAndReturnKey(data).intValue();
 
 
     }
 
-    private void update(Question question){
-        template.update( "UPDATE  question SET title=? AND text=? WHERRE id=?",
-                question.getTitle(),question.getText(),question.getId(),question.getDate_time());
+    private void update(Question question) {
+        template.update("UPDATE  question SET title=? AND text=? WHERRE id=?",
+                question.getTitle(), question.getText(), question.getId(), question.getDate_time());
     }
 
 }
